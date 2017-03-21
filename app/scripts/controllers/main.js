@@ -2,16 +2,31 @@
 
 angular.module('angularyeomanApp')
   .controller('MainCtrl', function ($scope, localStorageService) {
-    var tareasAlm = localStorageService.get('tareas');
-    $scope.tareas = tareasAlm && tareasAlm.split('\n') || [];
-    $scope.$watch('tareas', function(){
-      localStorageService.add('tareas',$scope.tareas.join('\n'));
-    },true);
+    if(localStorageService.get("angular-list")){
+      $scope.tareas = localStorageService.get("angular-list");
+    }else {
+      $scope.tareas = [];
+    }
+    $scope.$watchCollection('tareas',function(newValue,oldValue){
+      localStorageService.set("angular-list",$scope.tareas);
+    });
+    $scope.clickedTarea = {};
     $scope.addTarea = function(){
-      $scope.tareas.push($scope.tarea);
-      $scope.tarea = '';
+      if($scope.newAct != null){
+        $scope.tareas.push($scope.newAct);
+        $scope.newAct = {};
+      }
+      else {
+        $scope.message = "Debes agregar una tarea";
+        console.log("Campo");
+      }
     };
     $scope.eliminarTarea = function(index){
       $scope.tareas.splice(index, 1);
     };
+
+    $scope.selectTarea = function(tarea){
+      $scope.clickedTarea = tarea;
+    };
+
   });

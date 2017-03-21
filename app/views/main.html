@@ -4,21 +4,49 @@
 <form role="form" ng-submit="addTarea()">
   <div class="row">
     <div class="input-group">
-      <input type="text" ng-model="tarea" placeholder="Añadir tarea" class="form-control">
+      <input type="text" ng-model="newAct.tarea" placeholder="Añadir tarea" class="form-control" required="Campo requerido">
+      <input type="datetime-local" ng-model="newAct.fecha" class="form-control" required="Campo requerido">
       <span class="input-group-btn">
         <input type="submit" class="btn btn-primary" value="Añadir">
       </span>
     </div>
   </div>
 </form>
+<div class="alert alert-info" ng-if="message">
+  <a href="#" class="close" ng-click="clearMessage()" aria-label="close" >&times;</a>
+  <strong>{{message}}</strong>
+</div>
 <br>
 <div ui-sortable ng-model="tareas">
-  <p class="input-group" ng-repeat="tarea in tareas" style="padding:5px 10px; cursor: move;">
-    <input type="text" ng-model="tarea" class="form-control">
+  <p class="input-group" ng-repeat="tarea in tareas track by $index" style="padding:5px 10px; cursor: move;">
+    <label type="text" class="form-control"><strong>{{tarea.tarea}}</strong>  {{tarea.fecha | date:'fullDate'}}
+    <span class="input-group-btn">
+        <button class="btn btn-info" data-toggle="modal" data-target="#myModalTarea" ng-click="selectTarea(tarea)" arial-label="Ver"><span class="glyphicon glyphicon-eye-open"></span></button>
+    </span>
     <span class="input-group-btn">
       <button class="btn btn-danger" ng-click="eliminarTarea($index)" arial-label="Eliminar">X</button>
     </span>
   </p>
 </div>
+</div>
 
+<div id="myModalTarea" class="modal fade" role="dialog">
+  <div class="modal-dialog">
+
+    <!-- Modal content-->
+    <div class="modal-content">
+      <div class="modal-header">
+        <button type="button" class="close" data-dismiss="modal">&times;</button>
+        <h4 class="modal-title">Tarea</h4>
+      </div>
+      <div class="modal-body">
+        <h2>Tarea a realizar: </h2> <input class="button-group" style="color: blue;">{{clickedTarea.tarea}}<br>
+        <h3>Fecha: <strong style="color: blue;"><i class="glyphicon glyphicon-calendar"></i> {{clickedTarea.fecha | date:'fullDate'}} </strong></h3>
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-default" data-dismiss="modal">Volver</button>
+        <button type="button" class="btn btn-default" data-dismiss="modal">Modificar</button>
+      </div>
+    </div>
+  </div>
 </div>
